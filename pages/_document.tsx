@@ -44,11 +44,7 @@ export default class MyDocument extends Document {
   render(): ReactElement {
     return (
       <Html lang="es">
-        <Head>
-          <title>Quote</title>
-          <meta name="description" content="Random famous quotes generator" />
-          <link rel="icon" href="/favicon.png" />
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />
