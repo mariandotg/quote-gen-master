@@ -3,4 +3,5 @@ export interface QuoteObject {
   content: string;
   author: string;
   authorSlug: string;
+  tags: string[];
 }

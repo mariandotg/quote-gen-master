@@ -5,28 +5,34 @@ import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { QuoteObject } from "../types";
+import Quote from "../components/Quote";
 
 const Home: NextPage = () => {
-  const [quote, setQuote] = useState("");
-  const [author, setAuthor] = useState("");
-  const [tags, setTags] = useState("");
+  const [quote, setQuote] = useState({});
 
   const getQuote = async () => {
     try {
       const res = await axios.get(`${process.env.BASE_URL}random`);
-      setQuote(res.data.content);
-      setAuthor(res.data.authorSlug);
-      setTags(res.data.tags);
+      setQuote(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getQuote();
+    const storedQuote = JSON.parse(localStorage.getItem("Quote.randomQuote")!);
+    if (storedQuote) {
+      setQuote(storedQuote);
+    } else getQuote();
   }, []);
 
-  
+  useEffect(() => {
+    localStorage.setItem("Quote.randomQuote", JSON.stringify(quote));
+  }, [quote]);
+
+  const { _id, content, author, authorSlug, tags }: any = quote;
+
   return (
     <div className={styles.container}>
       <Head>
@@ -36,9 +42,7 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <button onClick={getQuote}>New quote</button>
-        <h1>{quote}</h1>
-        <Link href={`/authors/${author}`}>{author}</Link>
-        <p>{tags}</p>
+        <Quote quote={quote} />
       </main>
       <footer className={styles.footer}>
         <a
